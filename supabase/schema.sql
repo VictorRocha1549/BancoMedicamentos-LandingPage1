@@ -8,19 +8,12 @@ CREATE TABLE IF NOT EXISTS medicamentos (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   nombre VARCHAR(255) NOT NULL,
   gramaje VARCHAR(100) NOT NULL,
+  presentacion VARCHAR(100) NOT NULL DEFAULT 'Tabletas',
   descripcion TEXT,
   disponible BOOLEAN DEFAULT true,
   imagen_url TEXT,
-  categoria VARCHAR(100),
   creado_en TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   actualizado_en TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Tabla de categorías
-CREATE TABLE IF NOT EXISTS categorias (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  nombre VARCHAR(100) NOT NULL UNIQUE,
-  descripcion TEXT
 );
 
 -- Tabla de movimientos de inventario
@@ -37,25 +30,24 @@ CREATE TABLE IF NOT EXISTS movimientos_inventario (
 
 -- Índices para mejor rendimiento
 CREATE INDEX idx_medicamentos_nombre ON medicamentos(nombre);
-CREATE INDEX idx_medicamentos_categoria ON medicamentos(categoria);
 CREATE INDEX idx_medicamentos_disponible ON medicamentos(disponible);
 CREATE INDEX idx_movimientos_medicamento ON movimientos_inventario(medicamento_id);
 CREATE INDEX idx_movimientos_creado ON movimientos_inventario(creado_en);
 
 -- Datos de ejemplo
-INSERT INTO medicamentos (nombre, gramaje, descripcion, disponible, categoria) VALUES
-('Paracetamol', '500 mg', 'Analgésico y antipirético para dolor leve a moderado y fiebre.', true, 'Analgésico'),
-('Ibuprofeno', '400 mg', 'Antiinflamatorio no esteroideo para dolor e inflamación.', true, 'Antiinflamatorio'),
-('Amoxicilina', '500 mg', 'Antibiótico de amplio espectro para infecciones bacterianas.', false, 'Antibiótico'),
-('Omeprazol', '20 mg', 'Inhibidor de bomba de protones para acidez y reflujo.', true, 'Gastrointestinal'),
-('Losartán', '50 mg', 'Antihipertensivo para control de presión arterial.', true, 'Cardiovascular'),
-('Metformina', '850 mg', 'Antidiabético oral para control de glucosa en diabetes tipo 2.', true, 'Antidiabético'),
-('Atorvastatina', '20 mg', 'Estatina para reducción de colesterol y triglicéridos.', false, 'Cardiovascular'),
-('Loratadina', '10 mg', 'Antihistamínico para alergias y rinitis.', true, 'Antialérgico'),
-('Diclofenaco', '50 mg', 'Antiinflamatorio para dolor muscular y articular.', true, 'Antiinflamatorio'),
-('Enalapril', '10 mg', 'IECA para tratamiento de hipertensión arterial.', true, 'Cardiovascular'),
-('Salbutamol', '100 mcg/dosis', 'Broncodilatador para asma y EPOC.', true, 'Respiratorio'),
-('Acetaminofén Jarabe', '120 mg/5 ml', 'Analgésico y antipirético pediátrico.', false, 'Analgésico');
+INSERT INTO medicamentos (nombre, gramaje, presentacion, descripcion, disponible) VALUES
+('Paracetamol', '500 mg', 'Tabletas', 'Analgésico y antipirético para dolor leve a moderado y fiebre. Caja con 20 tabletas.', true),
+('Ibuprofeno', '400 mg', 'Tabletas', 'Antiinflamatorio no esteroideo para dolor e inflamación. Caja con 30 tabletas recubiertas.', true),
+('Amoxicilina', '500 mg', 'Cápsulas', 'Antibiótico de amplio espectro para infecciones bacterianas. Caja con 21 cápsulas.', false),
+('Omeprazol', '20 mg', 'Cápsulas', 'Inhibidor de bomba de protones para acidez y reflujo gastroesofágico. Caja con 14 cápsulas.', true),
+('Losartán', '50 mg', 'Tabletas', 'Antihipertensivo para control de presión arterial sistémica. Caja con 30 tabletas.', true),
+('Metformina', '850 mg', 'Tabletas', 'Antidiabético oral para control de glucosa en diabetes tipo 2. Caja con 30 tabletas.', true),
+('Atorvastatina', '20 mg', 'Tabletas', 'Estatina para reducción de colesterol y triglicéridos en sangre. Caja con 30 tabletas.', false),
+('Loratadina', '10 mg', 'Tabletas', 'Antihistamínico para alergias, rinitis alérgica y urticaria. Caja con 10 tabletas.', true),
+('Diclofenaco', '50 mg', 'Tabletas', 'Antiinflamatorio para dolor muscular, articular y postoperatorio. Caja con 20 tabletas.', true),
+('Enalapril', '10 mg', 'Tabletas', 'IECA para tratamiento de hipertensión arterial e insuficiencia cardíaca. Caja con 30 tabletas.', true),
+('Salbutamol', '100 mcg/dosis', 'Inhalador', 'Broncodilatador en aerosol para asma y enfermedad pulmonar obstructiva crónica.', true),
+('Acetaminofén', '120 mg/5 ml', 'Jarabe', 'Analgésico y antipirético pediátrico en suspensión oral. Frasco con 120 ml.', false);
 
 -- Habilitar RLS (Row Level Security)
 ALTER TABLE medicamentos ENABLE ROW LEVEL SECURITY;
